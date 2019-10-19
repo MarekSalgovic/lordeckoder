@@ -7,7 +7,7 @@ import (
 func fixDeckcodeLength(dc string) (string) {
 	length := len(dc)
 	if (length%8 != 0) {
-		for i := 0; i < length%8; i++ {
+		for i := 0; i < 8-length%8; i++ {
 			dc = dc + string(base32.StdPadding)
 		}
 	}
