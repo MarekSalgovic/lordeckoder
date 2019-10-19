@@ -15,9 +15,10 @@ go get github.com/MarekSalgovic/lordeckoder
 Decodes deckcode string to deck struct. For more details see [format](https://github.com/RiotGames/LoRDeckCodes#process).
 ```go
 func main(){
+	dc := "CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4"
 	// deckcode, format and version number
 	// use lordeckoder.Decode(dc) for default (currently 1,1)
-	deck, err := lordeckoder.Decode("CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4", 1,1)
+	deck, err := lordeckoder.Decode(dc, 1,1)
 	
 	if err != nil{
 		log.Fatalln(err)
