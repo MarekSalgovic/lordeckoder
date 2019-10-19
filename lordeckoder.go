@@ -6,7 +6,7 @@ import (
 )
 
 type Decoder interface {
-	DecodeDeckcode(dc string) (Deck, error)
+	DecodeDeckcode(dc string) (internal.Deck, error)
 }
 
 type Decode struct{
@@ -22,19 +22,19 @@ func NewDecoder(format, version int) Decode{
 }
 
 
-func (d *Decode) DecodeDeckcode(dc string) (Deck, error){
+func (d *Decode) DecodeDeckcode(dc string) (internal.Deck, error){
 	dc = internal.FixDeckcodeLength(dc)
 	bs, err := base32.StdEncoding.DecodeString(dc)
 	if err != nil{
-		return Deck{}, err
+		return internal.Deck{}, err
 	}
 	bs, err = internal.ParseHeader(bs, d)
 	if err != nil{
-		return Deck{}, err
+		return internal.Deck{}, err
 	}
 	deck, err := internal.ParseByteStream(bs)
 	if err != nil{
-		return Deck{}, err
+		return internal.Deck{}, err
 	}
 	return deck, nil
 }

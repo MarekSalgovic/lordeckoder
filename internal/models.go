@@ -1,4 +1,4 @@
-package lordeckoder
+package internal
 
 type Deck struct {
 	Cards []Card

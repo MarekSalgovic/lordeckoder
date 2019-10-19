@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/binary"
 	"errors"
-	"github.com/MarekSalgovic/lordeckoder"
 )
 
 var (
@@ -22,35 +21,35 @@ func ParseHeader(bs []byte, d *lordeckoder.Decode) ([]byte, error){
 	return bs, nil
 }
 
-func ParseByteStream(bs []byte) (lordeckoder.Deck, error){
-	var deck lordeckoder.Deck
+func ParseByteStream(bs []byte) (Deck, error){
+	var deck Deck
 	for len(bs)>0{
-		for i := 0; i < lordeckoder.MAX_CARD_COUNT; i++{
+		for i := 0; i < MAX_CARD_COUNT; i++{
 			var err error
-			var cards []lordeckoder.Card
-			bs, cards, err = setFactionCombinations(bs, lordeckoder.MAX_CARD_COUNT-i)
+			var cards []Card
+			bs, cards, err = setFactionCombinations(bs, MAX_CARD_COUNT-i)
 			if err != nil{
-				return lordeckoder.Deck{}, err
+				return Deck{}, err
 			}
 			deck.Cards = append(deck.Cards, cards...)
 		}
 		if len(bs)!=0{
-			return lordeckoder.Deck{},ErrInvalidCode
+			return Deck{},ErrInvalidCode
 		}
 	}
 	return deck,nil
 }
 
-func setFactionCombinations(bs []byte, count int) ([]byte, []lordeckoder.Card, error){
-	var returnCards []lordeckoder.Card
+func setFactionCombinations(bs []byte, count int) ([]byte, []Card, error){
+	var returnCards []Card
 	combinationCount, c := binary.Uvarint(bs)
 	bs = bs[c:]
 	for j := 0; j < int(combinationCount); j++{
-		var cards []lordeckoder.Card
+		var cards []Card
 		var err error
 		bs, cards, err = setFactionCombinationCards(bs, count)
 		if err != nil{
-			return []byte{}, []lordeckoder.Card{}, err
+			return []byte{}, []Card{}, err
 		}
 		returnCards = append(returnCards, cards...)
 	}
@@ -58,8 +57,8 @@ func setFactionCombinations(bs []byte, count int) ([]byte, []lordeckoder.Card, e
 }
 
 
-func setFactionCombinationCards(bs []byte, count int) ([]byte, []lordeckoder.Card, error){
-	var cards []lordeckoder.Card
+func setFactionCombinationCards(bs []byte, count int) ([]byte, []Card, error){
+	var cards []Card
 	countOfUniqueCards, c := binary.Uvarint(bs)
 	bs = bs[c:]
 	set, c := binary.Uvarint(bs)
@@ -68,7 +67,7 @@ func setFactionCombinationCards(bs []byte, count int) ([]byte, []lordeckoder.Car
 	bs = bs[c:]
 	factionString, err := factionIdToString(int(faction))
 	if err != nil{
-		return []byte{}, []lordeckoder.Card{}, err
+		return []byte{}, []Card{}, err
 	}
 	for i := 0; i < int(countOfUniqueCards); i++{
 		cardNumber, c  := binary.Uvarint(bs)

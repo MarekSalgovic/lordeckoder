@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"github.com/MarekSalgovic/lordeckoder"
 )
 
 func FixDeckcodeLength(dc string) (string){
@@ -16,18 +15,18 @@ func FixDeckcodeLength(dc string) (string){
 	return dc
 }
 
-func factionIdToString(id int) (lordeckoder.Faction, error){
-	factions :=  []lordeckoder.Faction{lordeckoder.DEMACIA, lordeckoder.FRELJORD, lordeckoder.IONIA, lordeckoder.NOXUS, lordeckoder.PILTOVERZAUN, lordeckoder.SHADOWISLES}
+func factionIdToString(id int) (Faction, error){
+	factions :=  []Faction{DEMACIA, FRELJORD, IONIA, NOXUS, PILTOVERZAUN, SHADOWISLES}
 	if id >= len(factions){
 		return "", ErrInvalidCode
 	}
 	return factions[id], nil
 }
 
-func setCardStruct(set, number, count int, faction lordeckoder.Faction) lordeckoder.Card {
+func setCardStruct(set, number, count int, faction Faction) Card {
 	setString := fmt.Sprintf("%02d", set)
 	numberString := fmt.Sprintf("%03d", number)
-	return lordeckoder.Card{
+	return Card{
 		CardCode: setString+string(faction)+numberString,
 		Count:    count,
 	}
