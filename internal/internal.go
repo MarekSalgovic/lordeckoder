@@ -14,7 +14,7 @@ var (
 func ParseHeader(bs []byte, format, version int) ([]byte, error){
 	byteFormatVersion, c := binary.Uvarint(bs)
 	fvd := format * 16 + version
-	if int(byteFormatVersion) != fvd && c != 1{
+	if int(byteFormatVersion) != fvd || c != 1{
 		return bs,ErrInvalidCode
 	}
 	bs = bs[c:]

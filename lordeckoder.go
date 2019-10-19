@@ -2,7 +2,6 @@ package lordeckoder
 
 import (
 	"encoding/base32"
-	"fmt"
 	"github.com/MarekSalgovic/lordeckoder/internal"
 )
 
@@ -24,7 +23,6 @@ func NewDecoder(params ...int) Decode{
 	if len(params) > 1{
 		version = params[1]
 	}
-	fmt.Println(format,version)
 	return Decode{
 		Format:  format,
 		Version: version,
