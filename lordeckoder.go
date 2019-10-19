@@ -2,19 +2,10 @@ package lordeckoder
 
 import (
 	"encoding/base32"
-	"github.com/MarekSalgovic/lordeckoder/internal"
 )
 
-type Decoder interface {
-	DecodeDeckcode(dc string) (internal.Deck, error)
-}
 
-type Decode struct {
-	Format  int
-	Version int
-}
-
-func NewDecoder(params ...int) Decode {
+func getFormatVersion(params []int) (int,int) {
 	format, version := 1,1
 	if len(params) > 0 {
 		format = params[0]
@@ -22,25 +13,29 @@ func NewDecoder(params ...int) Decode {
 	if len(params) > 1 {
 		version = params[1]
 	}
-	return Decode{
-		Format:  format,
-		Version: version,
-	}
+	return format, version
 }
 
-func (d *Decode) DecodeDeckcode(dc string) (internal.Deck, error) {
-	dc = internal.FixDeckcodeLength(dc)
+
+
+//dc string - deck string to decode
+//params 	- first param is format - default value 1
+//			- second param is version - default value 1
+//			- rest is ignored
+func Decode(dc string, params ...int) (Deck, error) {
+	format, version := getFormatVersion(params)
+	dc = fixDeckcodeLength(dc)
 	bs, err := base32.StdEncoding.DecodeString(dc)
 	if err != nil {
-		return internal.Deck{}, err
+		return Deck{}, err
 	}
-	bs, err = internal.ParseHeader(bs, d.Format, d.Version)
+	bs, err = ParseHeader(bs, format, version)
 	if err != nil {
-		return internal.Deck{}, err
+		return Deck{}, err
 	}
-	deck, err := internal.ParseByteStream(bs)
+	deck, err := ParseByteStream(bs)
 	if err != nil {
-		return internal.Deck{}, err
+		return Deck{}, err
 	}
 	return deck, nil
 }

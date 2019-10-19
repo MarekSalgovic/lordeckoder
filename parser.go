@@ -1,4 +1,4 @@
-package internal
+package lordeckoder
 
 import (
 	"encoding/binary"
@@ -13,7 +13,7 @@ var (
 // format1 version1 is represented by 00010001 = 17
 func ParseHeader(bs []byte, format, version int) ([]byte, error){
 	byteFormatVersion, c := binary.Uvarint(bs)
-	fvd := format * 16 + version
+	fvd := format << 4 + version
 	if int(byteFormatVersion) != fvd || c != 1{
 		return bs,ErrInvalidCode
 	}
@@ -65,14 +65,10 @@ func setFactionCombinationCards(bs []byte, count int) ([]byte, []Card, error){
 	bs = bs[c:]
 	faction, c := binary.Uvarint(bs)
 	bs = bs[c:]
-	factionString, err := factionIdToString(int(faction))
-	if err != nil{
-		return []byte{}, []Card{}, err
-	}
 	for i := 0; i < int(countOfUniqueCards); i++{
 		cardNumber, c  := binary.Uvarint(bs)
 		bs = bs[c:]
-		card := setCardStruct(int(set), int(cardNumber), count, factionString)
+		card := setCardStruct(int(set), int(cardNumber), count, int(faction))
 		cards = append(cards, card)
 	}
 	return bs, cards, nil

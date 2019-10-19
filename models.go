@@ -1,12 +1,18 @@
-package internal
+package lordeckoder
 
 type Deck struct {
 	Cards []Card
 }
 
 type Card struct {
-	CardCode string
+	CardCode CardCode
 	Count    int
+}
+
+type CardCode struct {
+	Set     int
+	Faction int
+	Number  int
 }
 
 type Faction string
@@ -18,6 +24,7 @@ const (
 	NOXUS        Faction = "NX"
 	PILTOVERZAUN Faction = "PZ"
 	SHADOWISLES  Faction = "SI"
+	UNKNOWN      Faction = "XX"
 )
 
 const MAX_CARD_COUNT = 3
