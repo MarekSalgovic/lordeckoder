@@ -14,7 +14,15 @@ type Decode struct{
 	Version int
 }
 
-func NewDecoder(format, version int) Decode{
+func NewDecoder(params ...int) Decode{
+	format := 1
+	version := 1
+	if len(params) > 0{
+		format = params[0]
+	}
+	if len(params) > 1{
+		version = params[1]
+	}
 	return Decode{
 		Format:  format,
 		Version: version,

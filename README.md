@@ -14,15 +14,20 @@ go get github.com/MarekSalgovic/lordeckoder
 
 Decodes deckcode string to deck struct. For more details see [format](https://github.com/RiotGames/LoRDeckCodes#process).
 ```go
-deckstring := "AAECAaIHBrICyAOvBOEE5/oC/KMDDLQBywPNA9QF7gaIB90I7/ECj5cDiZsD/6UD9acDAA=="
-deck, err := hsdeckoder.Decode(deckstring)
-//handle error
-if err != nil{
-  panic(err)
+func main(){
+	
+	d := lordeckoder.NewDecoder(1,1) //format and version number
+	// use lordeckoder.NewDecoder() for default (currently 1,1)
+	deck, err := d.DecodeDeckcode("CEBAGAIFDYYDCBQBAEBQOFRBFEYQEAIBAE2AKAIFAEQCGKZWAEAQCAJH")
+	if err != nil{
+		log.Fatalln(err)
+	}
+	fmt.Println(deck)
+	//{[{01SI030 3} {01SI048 3} {01SI049 3} {01FR003 3} 
+    	//  {01FR007 3} {01FR022 3} {01FR033 3} {01FR041 3}
+    	//  {01FR049 3} {01FR052 2} {01SI001 2} {01SI032 2} 
+    	//  {01SI035 2} {01SI043 2} {01SI054 2} {01FR039 1}]}
 }
-fmt.Println(deck)
-//{2 [930] [{306 1} {456 1} {559 1} {609 1} {48487 1} {53756 1} {180 2} {459 2} {461 2} 
-//{724 2} {878 2} {904 2} {1117 2} {47343 2} {52111 2} {52617 2} {54015 2} {54261 2}]}
 ```
 
 Available structs:
