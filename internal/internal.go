@@ -11,9 +11,9 @@ var (
 
 //each deckcode starts with 0001 0001 - 4 bits for format(currently only 1) and 4 bits for version(currently only 1)
 // format1 version1 is represented by 00010001 = 17
-func ParseHeader(bs []byte, d *lordeckoder.Decode) ([]byte, error){
+func ParseHeader(bs []byte, format, version int) ([]byte, error){
 	byteFormatVersion, c := binary.Uvarint(bs)
-	fvd := d.Format * 16 + d.Version
+	fvd := format * 16 + version
 	if int(byteFormatVersion) != fvd && c != 1{
 		return bs,ErrInvalidCode
 	}

@@ -28,7 +28,7 @@ func (d *Decode) DecodeDeckcode(dc string) (internal.Deck, error){
 	if err != nil{
 		return internal.Deck{}, err
 	}
-	bs, err = internal.ParseHeader(bs, d)
+	bs, err = internal.ParseHeader(bs, d.Format, d.Version)
 	if err != nil{
 		return internal.Deck{}, err
 	}
