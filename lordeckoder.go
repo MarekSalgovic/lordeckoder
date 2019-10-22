@@ -5,8 +5,8 @@ import (
 )
 
 
-func getFormatVersion(params []int) (int,int) {
-	format, version := 1,1
+func getFormatVersion(params []int) (int, int) {
+	format, version := 1, 1
 	if len(params) > 0 {
 		format = params[0]
 	}
@@ -16,10 +16,9 @@ func getFormatVersion(params []int) (int,int) {
 	return format, version
 }
 
-
-
 //dc string - deck string to decode
-//params 	- first param is format - default value 1
+//params
+// 			- first param is format - default value 1
 //			- second param is version - default value 1
 //			- rest is ignored
 func Decode(dc string, params ...int) (Deck, error) {
@@ -29,11 +28,11 @@ func Decode(dc string, params ...int) (Deck, error) {
 	if err != nil {
 		return Deck{}, err
 	}
-	bs, err = ParseHeader(bs, format, version)
+	bs, err = parseHeader(bs, format, version)
 	if err != nil {
 		return Deck{}, err
 	}
-	deck, err := ParseByteStream(bs)
+	deck, err := parseByteStream(bs)
 	if err != nil {
 		return Deck{}, err
 	}

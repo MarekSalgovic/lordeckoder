@@ -1,15 +1,15 @@
 package lordeckoder
 
 type Deck struct {
-	Cards []Card
+	Cards []CardInDeck
 }
 
-type Card struct {
-	CardCode CardCode
+type CardInDeck struct {
+	Card Card
 	Count    int
 }
 
-type CardCode struct {
+type Card struct {
 	Set     int
 	Faction int
 	Number  int

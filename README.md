@@ -32,7 +32,7 @@ func main(){
 	//42
 	fmt.Println(deck.Cards[0].CardCode.Faction)
 	//3
-	fmt.Println(lordeckoder.FactionIdToString(deck.Cards[0].CardCode.Faction))
+	fmt.Println(lordeckoder.FactionIdToAbbr(deck.Cards[0].CardCode.Faction))
 	//NX
 	fmt.Println(deck.Cards[0].CardCode)
 	//01NX042
@@ -40,19 +40,34 @@ func main(){
 
 ```
 
+Exported methods:
+
+```
+//decodes deckcode to deck struct
+lordeckoder.Decode(deckcode string, params ...int)
+
+//stringer of CardCode 
+//{1 3 42} -> 01NX042
+lordeckoder.Card{}.String() string
+
+//gets abbreviation of card faction 
+//{1 3 42} -> NX
+lordeckoder.Card{}.GetFaction() Faction
+```
+
 Available structs:
 
 ```go
 type Deck struct {
-	Cards []Card
+	Cards []CardInDeck
 }
 
-type Card struct {
-	CardCode CardCode
+type CardInDeck struct {
+	Card Card
 	Count    int
 }
 
-type CardCode struct {
+type Card struct {
 	Set     int
 	Faction int
 	Number  int
