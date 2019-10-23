@@ -15,11 +15,9 @@ go get github.com/MarekSalgovic/lordeckoder
 Decodes deckcode string to deck struct. For more details see [format](https://github.com/RiotGames/LoRDeckCodes#process).
 ```go
 func main(){
-	dc := "CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4"
 	// deckcode, format and version number
 	// use lordeckoder.Decode(dc) for default (currently 1,1)
-	deck, err := lordeckoder.Decode(dc, 1,1)
-	
+	deck, err := lordeckoder.Decode("CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4", 1,1)
 	if err != nil{
 		log.Fatalln(err)
 	}
@@ -28,16 +26,15 @@ func main(){
 	//  {01IO044 3} {01IO049 3} {01IO057 3} {01IO002 2} {01IO022 2}
 	//  {01NX012 2} {01NX020 2} {01NX027 2} {01IO009 1} {01NX025 1}
 	//  {01NX035 1} {01NX043 1} {01NX054 1} {01NX055 1}]}
-	fmt.Println(deck.Cards[0].CardCode.Number)
+	fmt.Println(deck.Cards[0].Card.Number)
 	//42
-	fmt.Println(deck.Cards[0].CardCode.Faction)
+	fmt.Println(deck.Cards[0].Card.Faction)
 	//3
-	fmt.Println(lordeckoder.FactionIdToAbbr(deck.Cards[0].CardCode.Faction))
+	fmt.Println(deck.Cards[0].Card.GetFaction())
 	//NX
-	fmt.Println(deck.Cards[0].CardCode)
+	fmt.Println(deck.Cards[0].Card)
 	//01NX042
 }
-
 ```
 
 Exported methods:
