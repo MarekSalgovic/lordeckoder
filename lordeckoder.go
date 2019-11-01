@@ -39,7 +39,7 @@ func Decode(dc string, params ...int) (Deck, error) {
 	return deck, nil
 }
 
-func Encode(deck Deck, params ...int) (string){
+func Encode(deck Deck, params ...int) string{
 	format, version := getFormatVersion(params)
 	groups := sortDeck(deck)
 	bs := []byte{}

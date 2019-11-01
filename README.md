@@ -49,10 +49,10 @@ Exported methods:
 
 ```go
 //decodes deckcode to deck struct
-lordeckoder.Decode(deckcode string, params ...int)
+lordeckoder.Decode(deckcode string, params ...int) (Deck, error)
 
 //encodes deck struct to deckcode
-lordeckoder.Encode(deck Deck, params ...int)
+lordeckoder.Encode(deck Deck, params ...int) string
 
 //stringer of CardCode 
 //{1 3 42} -> 01NX042
