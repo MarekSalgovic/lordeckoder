@@ -28,13 +28,23 @@ func Decode(dc string, params ...int) (Deck, error) {
 	if err != nil {
 		return Deck{}, err
 	}
-	bs, err = parseHeader(bs, format, version)
+	bs, err = decodeHeader(bs, format, version)
 	if err != nil {
 		return Deck{}, err
 	}
-	deck, err := parseByteStream(bs)
+	deck, err := decodeByteStream(bs)
 	if err != nil {
 		return Deck{}, err
 	}
 	return deck, nil
+}
+
+func Encode(deck Deck, params ...int) (string){
+	format, version := getFormatVersion(params)
+	groups := sortDeck(deck)
+	bs := []byte{}
+	bs = append(bs,encodeHeader(format, version)...)
+	bs = append(bs,encodeByteStream(groups)...)
+	dc := removePadding(base32.StdEncoding.EncodeToString(bs))
+	return dc
 }

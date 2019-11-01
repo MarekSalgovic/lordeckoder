@@ -23,7 +23,7 @@ func fixDeckcodeLength(dc string) (string) {
 
 //each deckcode starts with 0001 0001 - 4 bits for format(currently only 1) and 4 bits for version(currently only 1)
 // format1 version1 is represented by 00010001 = 17
-func parseHeader(bs []byte, format, version int) ([]byte, error){
+func decodeHeader(bs []byte, format, version int) ([]byte, error){
 	byteFormatVersion, c := binary.Uvarint(bs)
 	fvd := format << 4 + version
 	if int(byteFormatVersion) != fvd || c != 1{
@@ -33,13 +33,13 @@ func parseHeader(bs []byte, format, version int) ([]byte, error){
 	return bs, nil
 }
 
-func parseByteStream(bs []byte) (Deck, error){
+func decodeByteStream(bs []byte) (Deck, error){
 	var deck Deck
 	for len(bs)>0{
 		for i := 0; i < MAX_CARD_COUNT; i++{
 			var err error
 			var cards []CardInDeck
-			bs, cards, err = parseSetFactionCombinations(bs, MAX_CARD_COUNT-i)
+			bs, cards, err = decodeSetFactionCombinations(bs, MAX_CARD_COUNT-i)
 			if err != nil{
 				return Deck{}, err
 			}
@@ -52,14 +52,14 @@ func parseByteStream(bs []byte) (Deck, error){
 	return deck,nil
 }
 
-func parseSetFactionCombinations(bs []byte, count int) ([]byte, []CardInDeck, error){
+func decodeSetFactionCombinations(bs []byte, count int) ([]byte, []CardInDeck, error){
 	var returnCards []CardInDeck
 	combinationCount, c := binary.Uvarint(bs)
 	bs = bs[c:]
 	for j := 0; j < int(combinationCount); j++{
 		var cards []CardInDeck
 		var err error
-		bs, cards, err = parseSetFactionCombinationCards(bs, count)
+		bs, cards, err = decodeSetFactionCombinationCards(bs, count)
 		if err != nil{
 			return []byte{}, []CardInDeck{}, err
 		}
@@ -69,7 +69,7 @@ func parseSetFactionCombinations(bs []byte, count int) ([]byte, []CardInDeck, er
 }
 
 
-func parseSetFactionCombinationCards(bs []byte, count int) ([]byte, []CardInDeck, error){
+func decodeSetFactionCombinationCards(bs []byte, count int) ([]byte, []CardInDeck, error){
 	var cards []CardInDeck
 	countOfUniqueCards, c := binary.Uvarint(bs)
 	bs = bs[c:]

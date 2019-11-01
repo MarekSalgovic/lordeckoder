@@ -5,8 +5,8 @@ type Deck struct {
 }
 
 type CardInDeck struct {
-	Card Card
-	Count    int
+	Card  Card
+	Count int
 }
 
 type Card struct {
