@@ -34,14 +34,25 @@ func main(){
 	//NX
 	fmt.Println(deck.Cards[0].Card)
 	//01NX042
+	
+	fmt.Println(lordeckoder.Encode(deck))
+	//CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(deck.Cards), func(i, j int) { deck.Cards[i], deck.Cards[j] = deck.Cards[j], deck.Cards[i] })
+	//shuffles cards in deck to prove it generetes the same deckcode
+	fmt.Println(lordeckoder.Encode(deck))
+	//CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4
 }
 ```
 
 Exported methods:
 
-```
+```go
 //decodes deckcode to deck struct
 lordeckoder.Decode(deckcode string, params ...int)
+
+//encodes deck struct to deckcode
+lordeckoder.Encode(deck Deck, params ...int)
 
 //stringer of CardCode 
 //{1 3 42} -> 01NX042
