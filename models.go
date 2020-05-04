@@ -24,6 +24,7 @@ const (
 	NOXUS        Faction = "NX"
 	PILTOVERZAUN Faction = "PZ"
 	SHADOWISLES  Faction = "SI"
+	BILGEWATER   Faction = "BW"
 	UNKNOWN      Faction = "XX"
 )
 

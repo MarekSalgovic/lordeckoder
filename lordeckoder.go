@@ -4,7 +4,6 @@ import (
 	"encoding/base32"
 )
 
-
 func getFormatVersion(params []int) (int, int) {
 	format, version := 1, 1
 	if len(params) > 0 {
@@ -21,8 +20,8 @@ func getFormatVersion(params []int) (int, int) {
 // 			- first param is format - default value 1
 //			- second param is version - default value 1
 //			- rest is ignored
-func Decode(dc string, params ...int) (Deck, error) {
-	format, version := getFormatVersion(params)
+func Decode(dc string) (Deck, error) {
+	format, version := getFormatVersion([]int{})
 	dc = fixDeckcodeLength(dc)
 	bs, err := base32.StdEncoding.DecodeString(dc)
 	if err != nil {
@@ -39,12 +38,12 @@ func Decode(dc string, params ...int) (Deck, error) {
 	return deck, nil
 }
 
-func Encode(deck Deck, params ...int) string{
+func Encode(deck Deck, params ...int) string {
 	format, version := getFormatVersion(params)
 	groups := sortDeck(deck)
 	bs := []byte{}
-	bs = append(bs,encodeHeader(format, version)...)
-	bs = append(bs,encodeByteStream(groups)...)
+	bs = append(bs, encodeHeader(format, version)...)
+	bs = append(bs, encodeByteStream(groups)...)
 	dc := removePadding(base32.StdEncoding.EncodeToString(bs))
 	return dc
 }
