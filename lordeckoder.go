@@ -5,7 +5,7 @@ import (
 )
 
 func getFormatVersion(params []int) (int, int) {
-	format, version := 1, 1
+	format, version := 1, MAX_KNOWN_VERSION
 	if len(params) > 0 {
 		format = params[0]
 	}
@@ -21,13 +21,12 @@ func getFormatVersion(params []int) (int, int) {
 //			- second param is version - default value 1
 //			- rest is ignored
 func Decode(dc string) (Deck, error) {
-	format, version := getFormatVersion([]int{})
 	dc = fixDeckcodeLength(dc)
 	bs, err := base32.StdEncoding.DecodeString(dc)
 	if err != nil {
 		return Deck{}, err
 	}
-	bs, err = decodeHeader(bs, format, version)
+	bs, err = decodeHeader(bs)
 	if err != nil {
 		return Deck{}, err
 	}

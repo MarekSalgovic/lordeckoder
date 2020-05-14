@@ -11,6 +11,8 @@ import (
 type group_t struct {
 	count      int
 	setFaction string
+	set        int
+	faction    int
 	cards      []Card
 }
 
@@ -88,6 +90,8 @@ func sortDeck(deck Deck) []group_t {
 			groups = append(groups, group_t{
 				count:      deck.Cards[i].Count,
 				setFaction: setFaction,
+				set:        deck.Cards[i].Card.Set,
+				faction:    deck.Cards[i].Card.Faction,
 				cards:      []Card{deck.Cards[i].Card},
 			})
 		}
@@ -95,8 +99,11 @@ func sortDeck(deck Deck) []group_t {
 	for g := range groups {
 		sort.Slice(groups[g].cards, func(i, j int) bool { return groups[g].cards[i].Number < groups[g].cards[j].Number })
 	}
-	sort.Slice(groups, func(i, j int) bool { return groups[i].setFaction > groups[j].setFaction })
-	sort.Slice(groups, func(i, j int) bool { return len(groups[i].cards) > len(groups[j].cards) })
+
+	sort.Slice(groups, func(i, j int) bool { return groups[i].set > groups[j].set })
+
+	sort.Slice(groups, func(i, j int) bool { return groups[i].faction < groups[j].faction })
+
 	sort.Slice(groups, func(i, j int) bool { return groups[i].count > groups[j].count })
 	return groups
 }

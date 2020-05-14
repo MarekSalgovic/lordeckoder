@@ -29,3 +29,5 @@ const (
 )
 
 const MAX_CARD_COUNT = 3
+
+const MAX_KNOWN_VERSION = 2
