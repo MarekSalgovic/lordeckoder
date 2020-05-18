@@ -1,6 +1,6 @@
 # Legends of Runeterra Deckcode Decoder - lordeckoder
 
-Golang package to decode Legends of Runeterra deckstring to useful data inspired by [LoRDeckCodes](https://github.com/RiotGames/LoRDeckCodes).
+Golang package to decode/encode Legends of Runeterra deckstring to useful data inspired by [LoRDeckCodes](https://github.com/RiotGames/LoRDeckCodes).
 
 # Installation
 
