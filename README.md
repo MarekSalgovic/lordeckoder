@@ -34,13 +34,7 @@ func main(){
 	//NX
 	fmt.Println(deck.Cards[0].Card)
 	//01NX042
-	
-	fmt.Println(lordeckoder.Encode(deck))
-	//CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4
-	rand.Seed(time.Now().UnixNano())
-	rand.Shuffle(len(deck.Cards), func(i, j int) { deck.Cards[i], deck.Cards[j] = deck.Cards[j], deck.Cards[i] })
-	//shuffles cards in deck to prove it generetes the same deckcode
-	fmt.Println(lordeckoder.Encode(deck))
+	fmt.Println(deck.Encode())
 	//CEBACAIDFIDQCAQGBAIRULBRHEBAEAICAILAGAIDBQKBWAQBAEBASBIBAMMSGKZWG4
 }
 ```
@@ -49,10 +43,10 @@ Exported methods:
 
 ```go
 //decodes deckcode to deck struct
-lordeckoder.Decode(deckcode string, params ...int) (Deck, error)
+lordeckoder.Decode(deckcode string) (Deck, error)
 
 //encodes deck struct to deckcode
-lordeckoder.Encode(deck Deck, params ...int) string
+deck.Encode() string
 
 //stringer of CardCode 
 //{1 3 42} -> 01NX042
@@ -61,6 +55,9 @@ lordeckoder.Card{}.String() string
 //gets abbreviation of card faction 
 //{1 3 42} -> NX
 lordeckoder.Card{}.GetFaction() Faction
+
+//gets decks version
+deck.GetVersion()
 ```
 
 Available structs:
@@ -68,11 +65,6 @@ Available structs:
 ```go
 type Deck struct {
 	Cards []CardInDeck
-}
-
-type CardInDeck struct {
-	Card Card
-	Count    int
 }
 
 type Card struct {

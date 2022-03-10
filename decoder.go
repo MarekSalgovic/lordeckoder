@@ -7,72 +7,75 @@ import (
 )
 
 var (
-	ErrInvalidCode = errors.New("deckcode invalid")
-	ErrOldVersion  = errors.New("The provided code requires a higher version of this library; please update.")
+	//ErrInvalidCode - deckcode is invalid or can not be decoded
+	ErrInvalidCode = errors.New("deck code invalid")
+	//ErrOldVersion - deckcode has higher version than this package supports
+	ErrOldVersion = errors.New("the provided code requires a higher version of this library; please update")
 )
 
-func fixDeckcodeLength(dc string) string {
+func fixDeckCodeLength(dc string) string {
 	length := len(dc)
-	if length%8 != 0 {
-		for i := 0; i < 8-length%8; i++ {
-			dc = dc + string(base32.StdPadding)
-		}
+	if length%8 == 0 {
+		return dc
+	}
+	for i := 0; i < 8-length%8; i++ {
+		dc = dc + string(base32.StdPadding)
 	}
 	return dc
 }
 
-//each deckcode starts with 0001 0001 - 4 bits for format(currently only 1) and 4 bits for version(currently only 1)
-// format1 version1 is represented by 00010001 = 17
-func decodeHeader(bs []byte) ([]byte, error) {
+func decodeHeader(deck *Deck, bs []byte) ([]byte, error) {
 	byteFormatVersion, c := binary.Uvarint(bs)
-	version := byteFormatVersion & 0xF
 	if c != 1 {
 		return bs, ErrInvalidCode
 	}
-	if int(version) > MAX_KNOWN_VERSION {
+	format := byteFormatVersion >> 4
+	version := byteFormatVersion & 0xF
+	if int(version) > MaxKnownVersion {
 		return bs, ErrOldVersion
 	}
 	bs = bs[c:]
+	deck.version = int(version)
+	deck.format = int(format)
 	return bs, nil
 }
 
-func decodeByteStream(bs []byte) (Deck, error) {
-	var deck Deck
+func decodeByteStream(deck *Deck, bs []byte) error {
+	var err error
 	for len(bs) > 0 {
-		for i := 0; i < MAX_CARD_COUNT; i++ {
-			var err error
-			var cards []CardInDeck
-			bs, cards, err = decodeSetFactionCombinations(bs, MAX_CARD_COUNT-i)
+		for i := 0; i < maxCardCount; i++ {
+			var cards []cardInDeck
+			bs, cards, err = decodeSetFactionCombinations(bs, maxCardCount-i)
 			if err != nil {
-				return Deck{}, err
+				return err
 			}
 			deck.Cards = append(deck.Cards, cards...)
 		}
 		if len(bs) != 0 {
-			return Deck{}, ErrInvalidCode
+			return ErrInvalidCode
 		}
 	}
-	return deck, nil
+	return nil
 }
 
-func decodeSetFactionCombinations(bs []byte, count int) ([]byte, []CardInDeck, error) {
-	var returnCards []CardInDeck
+func decodeSetFactionCombinations(bs []byte, count int) ([]byte, []cardInDeck, error) {
+	var returnCards []cardInDeck
+	var err error
 	combinationCount, c := binary.Uvarint(bs)
 	bs = bs[c:]
 	for j := 0; j < int(combinationCount); j++ {
-		var cards []CardInDeck
-		var err error
+		var cards []cardInDeck
 		bs, cards, err = decodeSetFactionCombinationCards(bs, count)
 		if err != nil {
-			return []byte{}, []CardInDeck{}, err
+			return []byte{}, []cardInDeck{}, err
 		}
 		returnCards = append(returnCards, cards...)
 	}
 	return bs, returnCards, nil
 }
 
-func decodeSetFactionCombinationCards(bs []byte, count int) ([]byte, []CardInDeck, error) {
-	var cards []CardInDeck
+func decodeSetFactionCombinationCards(bs []byte, count int) ([]byte, []cardInDeck, error) {
+	var cards []cardInDeck
 	countOfUniqueCards, c := binary.Uvarint(bs)
 	bs = bs[c:]
 	set, c := binary.Uvarint(bs)
@@ -82,7 +85,7 @@ func decodeSetFactionCombinationCards(bs []byte, count int) ([]byte, []CardInDec
 	for i := 0; i < int(countOfUniqueCards); i++ {
 		cardNumber, c := binary.Uvarint(bs)
 		bs = bs[c:]
-		card := CardInDeck{
+		card := cardInDeck{
 			Card: Card{
 				Set:     int(set),
 				Faction: int(faction),

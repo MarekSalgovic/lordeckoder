@@ -4,43 +4,49 @@ import (
 	"encoding/base32"
 )
 
-func getFormatVersion(params []int) (int, int) {
-	format, version := 1, MAX_KNOWN_VERSION
-	if len(params) > 0 {
-		format = params[0]
-	}
-	if len(params) > 1 {
-		version = params[1]
-	}
-	return format, version
-}
+type Faction string
 
+const (
+	DEMACIA      Faction = "DE"
+	FRELJORD     Faction = "FR"
+	IONIA        Faction = "IO"
+	NOXUS        Faction = "NX"
+	PILTOVERZAUN Faction = "PZ"
+	SHADOWISLES  Faction = "SI"
+	BILGEWATER   Faction = "BW"
+	MOUNTTARGON  Faction = "MT"
+	SHURIMA      Faction = "SH"
+	BANDLECITY   Faction = "BC"
+	UNKNOWN      Faction = "XX"
+)
+const maxCardCount = 3
+const MaxKnownVersion = 4
+
+//Decode decodes deck string to deck model
 //dc string - deck string to decode
-//params
-// 			- first param is format - default value 1
-//			- second param is version - default value 1
-//			- rest is ignored
 func Decode(dc string) (Deck, error) {
-	dc = fixDeckcodeLength(dc)
+	deck := &Deck{}
+	dc = fixDeckCodeLength(dc)
 	bs, err := base32.StdEncoding.DecodeString(dc)
 	if err != nil {
-		return Deck{}, err
+		return *deck, err
 	}
-	bs, err = decodeHeader(bs)
+	bs, err = decodeHeader(deck, bs)
 	if err != nil {
 		return Deck{}, err
 	}
-	deck, err := decodeByteStream(bs)
+	err = decodeByteStream(deck, bs)
 	if err != nil {
 		return Deck{}, err
 	}
-	return deck, nil
+	return *deck, nil
 }
 
-func Encode(deck Deck, params ...int) string {
-	format, version := getFormatVersion(params)
+//Encode encodes deck model to deck string
+func (deck Deck) Encode() string {
+	var bs []byte
+	format, version := deck.format, deck.GetVersion()
 	groups := sortDeck(deck)
-	bs := []byte{}
 	bs = append(bs, encodeHeader(format, version)...)
 	bs = append(bs, encodeByteStream(groups)...)
 	dc := removePadding(base32.StdEncoding.EncodeToString(bs))
